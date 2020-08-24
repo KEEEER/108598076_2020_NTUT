@@ -17,7 +17,7 @@ public class LogicSimulatorTest{
     public void testGetSimulationResult(){
         LogicSimulator logicSimulator = new LogicSimulator();
 
-        logicSimulator.load(file1Path);
+        assertTrue(logicSimulator.load(file1Path));
         Vector<Boolean> inputValues = new Vector<>();
         inputValues.add(false);
         inputValues.add(true);
