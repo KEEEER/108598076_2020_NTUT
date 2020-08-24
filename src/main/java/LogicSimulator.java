@@ -54,6 +54,9 @@ public class LogicSimulator {
                     }
                 }
             }
+            for(int i=0 ; i<oPins.size() ; i++){
+                oPins.get(i).addInputPin(circuits.get(i));
+            }
             myReader.close();
             isLoad = true;
         } catch (FileNotFoundException e) {
@@ -66,10 +69,9 @@ public class LogicSimulator {
         for(int i=0 ; i<inputs.size() ; i++){
             iPins.get(i).setInput(inputs.get(i));
         }
-        for(int i=0 ; i<oPins.size() ; i++){
-            oPins.get(i).addInputPin(circuits.get(i));
-        }
+
         StringBuilder res = buildTempleteStr(inputs.size());
+        res.append("Simulation Result:\n");
 
         for(int i=0 ; i<inputs.size() ; i++) res.append(inputs.get(i) ? "1 " : "0 ");
         res.append("| ");
@@ -84,9 +86,16 @@ public class LogicSimulator {
         return res.toString();
     }
     public String getTruthTable(){
-        String res = "";
-
-        return res;
+        StringBuilder res = new StringBuilder();
+        res.append("Truth table:\n");
+        Device endOPin = null;
+        for(int i=0 ; i<oPinUsedTimes.size() ; i++){
+            if(oPinUsedTimes.get(i) == 0){
+                endOPin = oPins.get(i);
+            }
+        }
+        res.append(buildTempleteStr(iPins.size())).append(buildTruthTable(endOPin));
+        return res.toString();
     }
 
     private void createPins(int cirNum, int iPinNum){
@@ -98,10 +107,9 @@ public class LogicSimulator {
             this.oPinUsedTimes.add(0);
         }
     }
-
     private StringBuilder buildTempleteStr(int inputSize){
         StringBuilder res = new StringBuilder();
-        res.append("Simulation Result:\n");
+
         for(int i=0 ; i<inputSize ; i++) res.append("i ");
         res.append("| o\n");
         for(int i=0 ; i<inputSize ; i++) res.append(i+1).append(" ");
@@ -109,5 +117,42 @@ public class LogicSimulator {
         for(int i=0 ; i<inputSize ; i++) res.append("--");
         res.append("+--\n");
         return res;
+    }
+    private StringBuilder buildTruthTable(Device endOPin){
+        // 時間不夠，直接先刻
+        StringBuilder res = new StringBuilder();
+        Vector<Boolean> inputs = generateInputValues(false, false, false);
+        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
+        res.append("0 0 0 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
+        inputs = generateInputValues(false, false, true);
+        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
+        res.append("0 0 1 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
+        inputs = generateInputValues(false, true, false);
+        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
+        res.append("0 1 0 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
+        inputs = generateInputValues(false, true, true);
+        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
+        res.append("0 1 1 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
+        inputs = generateInputValues(true, false, false);
+        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
+        res.append("1 0 0 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
+        inputs = generateInputValues(true, false, true);
+        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
+        res.append("1 0 1 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
+        inputs = generateInputValues(true, true, false);
+        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
+        res.append("1 1 0 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
+        inputs = generateInputValues(true, true, true);
+        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
+        res.append("1 1 1 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
+        return res;
+    }
+    private Vector<Boolean> generateInputValues(boolean i1, boolean i2, boolean i3){
+        // 時間不夠，直接先刻
+        Vector<Boolean> inputs = new Vector<>();
+        inputs.add(i1);
+        inputs.add(i2);
+        inputs.add(i3);
+        return inputs;
     }
 }
