@@ -70,9 +70,9 @@ public class LogicSimulator {
             iPins.get(i).setInput(inputs.get(i));
         }
 
-        StringBuilder res = buildTempleteStr(inputs.size());
+        StringBuilder res = new StringBuilder();
         res.append("Simulation Result:\n");
-
+        res.append(buildTempleteStr(inputs.size()));
         for(int i=0 ; i<inputs.size() ; i++) res.append(inputs.get(i) ? "1 " : "0 ");
         res.append("| ");
 
