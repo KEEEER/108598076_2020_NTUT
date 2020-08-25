@@ -1,0 +1,16 @@
+000
+falsefalsefalse
+001
+falsefalsetrue
+010
+falsetruefalse
+011
+falsetruetrue
+100
+truefalsefalse
+101
+truefalsetrue
+110
+truetruefalse
+111
+truetruetrue

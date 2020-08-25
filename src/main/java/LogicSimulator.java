@@ -121,30 +121,18 @@ public class LogicSimulator {
     private StringBuilder buildTruthTable(Device endOPin){
         // 時間不夠，直接先刻
         StringBuilder res = new StringBuilder();
-        Vector<Boolean> inputs = generateInputValues(false, false, false);
-        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
-        res.append("0 0 0 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
-        inputs = generateInputValues(false, false, true);
-        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
-        res.append("0 0 1 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
-        inputs = generateInputValues(false, true, false);
-        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
-        res.append("0 1 0 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
-        inputs = generateInputValues(false, true, true);
-        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
-        res.append("0 1 1 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
-        inputs = generateInputValues(true, false, false);
-        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
-        res.append("1 0 0 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
-        inputs = generateInputValues(true, false, true);
-        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
-        res.append("1 0 1 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
-        inputs = generateInputValues(true, true, false);
-        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
-        res.append("1 1 0 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
-        inputs = generateInputValues(true, true, true);
-        for(int i=0 ; i<iPins.size() ; i++) iPins.get(i).setInput(inputs.get(i));
-        res.append("1 1 1 | ").append(endOPin.getOutput() ? "1\n" : "0\n");
+        String binStr = null;
+        for(int i=0 ;i<Math.pow(2.0, iPins.size()) ; i++){
+            binStr = Integer.toBinaryString(i);
+            binStr = String.format("%03d", Integer.parseInt(binStr));
+            System.out.println(binStr);
+            for(int j=0 ; j<binStr.length() ; j++){
+                iPins.get(j).setInput(binStr.charAt(j) == '1');
+                res.append(binStr.charAt(j)).append(" ");
+            }
+            System.out.println();
+            res.append("| ").append(endOPin.getOutput() ? "1\n" : "0\n");
+        }
         return res;
     }
     private Vector<Boolean> generateInputValues(boolean i1, boolean i2, boolean i3){
