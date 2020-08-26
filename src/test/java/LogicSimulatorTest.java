@@ -29,6 +29,20 @@ public class LogicSimulatorTest{
                 "------+--\n" +
                 "0 1 1 | 0\n", logicSimulator.getSimulationResult(inputValues));
 
+        logicSimulator = new LogicSimulator();
+
+        assertTrue(logicSimulator.load(file2Path));
+        inputValues = new Vector<>();
+        inputValues.add(false);
+        inputValues.add(true);
+        inputValues.add(true);
+
+        assertEquals("Simulation Result:\n" +
+                "i i i | o o\n" +
+                "1 2 3 | 1 2\n" +
+                "------+----\n" +
+                "0 1 1 | 0 1\n", logicSimulator.getSimulationResult(inputValues));
+
     }
     @Test
     public void testTruthTable(){

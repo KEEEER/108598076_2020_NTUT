@@ -22,11 +22,12 @@ public class LogicSimulator {
             Scanner myReader = new Scanner(myObj);
             String iPinNum = myReader.nextLine();
             String gateNum = myReader.nextLine();
-
             createPins(Integer.parseInt(gateNum), Integer.parseInt(iPinNum));
+
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] splitData = data.split(" ");
+
                 // 1 for and
                 if(splitData[0].equals("1")){
                     circuits.add(new GateAND());
@@ -75,20 +76,18 @@ public class LogicSimulator {
         res.append("Simulation Result:\n");
         res.append(buildTempleteStr(inputs.size()));
         for (Boolean input : inputs) res.append(input ? "1 " : "0 ");
-        res.append("| ");
+        res.append("|");
 
-        for(Integer i :oPinUsedTimes){
-            if(i == 0){
-                res.append(oPins.get(i).getOutput() ? "1\n" : "0\n");
-            }
+        for(Device device :getEndOPins()){
+            res.append(device.getOutput() ? " 1" : " 0");
         }
+        res.append("\n");
+
         return res.toString();
     }
     public String getTruthTable(){
-        StringBuilder res = new StringBuilder();
-        res.append("Truth table:\n");
-        res.append(buildTempleteStr(iPins.size())).append(buildTruthTable());
-        return res.toString();
+        return "Truth table:\n" +
+                buildTempleteStr(iPins.size()) + buildTruthTable();
     }
 
     private void createPins(int cirNum, int iPinNum){
@@ -119,10 +118,10 @@ public class LogicSimulator {
     private StringBuilder buildTruthTable(){
 
         StringBuilder res = new StringBuilder();
-        String binStr = null;
+        String binStr;
         for(int i=0 ;i<Math.pow(2.0, iPins.size()) ; i++){
             binStr = Integer.toBinaryString(i);
-            String paddingZeroStr = "%0" + String.valueOf(iPins.size()) + "d";
+            String paddingZeroStr = "%0" + iPins.size() + "d";
             binStr = String.format(paddingZeroStr, Integer.parseInt(binStr));
             int startIndex = binStr.length() - iPins.size();
             for(int j=startIndex ; j<binStr.length() ; j++){
